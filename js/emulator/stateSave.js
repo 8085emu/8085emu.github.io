@@ -88,10 +88,10 @@ function shareMemory(event) {
 	if(navigator.share) {
 		navigator.share({
 			title: 'Neutrino 8085 Assembler',
-			url: 'https://therdas.github.io/neutrinoURLRedir/?listing=' + uri
+			url: window.location.origin + '/redir.html?listing=' + uri
 		});
 	} else {
-		copyTextToClipboard('https://therdas.github.io/neutrinoURLRedir/?listing=' + uri);
+		copyTextToClipboard(window.location.origin + '/redir.html?listing=' + uri);
 		document.querySelector('#load-code').textContent = "Sharable link copied to clipboard!";
 		document.querySelector('#load-code').classList.add('shareOverride');
 		document.querySelector('#load-code').classList.remove('hidden');
