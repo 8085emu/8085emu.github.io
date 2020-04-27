@@ -1,0 +1,21 @@
+<html>
+  <head>
+    <title>
+      Neutrino :: 8085 Assembler and Runtime
+    </title>
+  </head>
+  <body>
+    NEUTRINO
+    <script>
+      var path = window.location.href;
+      var a = document.createElement('a');
+      var keyString = 'neutrinoURLRedir/';
+      var appPath = 'therdas://neutrinoRuntime';
+      var query = path.slice(path.indexOf(keyString) + keyString.length);
+      a.href = appPath + query;
+      a.textContent = 'If the app did not open automatically, click this link to open it...';
+      document.querySelector('body').appendChild(a);
+      a.click();
+    </script>
+  </body>
+</html>
