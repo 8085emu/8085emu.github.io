@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Neutrino•8085 Assembler</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="theme-color" content="#202020"/>
+	<meta name="mobile-web-app-capable" content="yes">
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,400i|Roboto+Mono:300,400,400i,700|Rubik+Mono+One&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/assembler.css">
+	<link rel="stylesheet" type="text/css" href="js/codemirror/theme/material-darker.css">
+	<link rel="stylesheet" type="text/css" href="js/codemirror/addon/dialog/dialog.css">
+	<link rel="stylesheet" type="text/css" href="js/codemirror/addon/scroll/simplescrollbars.css">
+	<link rel="stylesheet" type="text/css" href="js/codemirror/addon/search/matchesonscrollbar.css">
+
+
+	<script src="js/codemirror/lib/codemirror.js"></script>
+	<script src="js/editor/codeflask.js"></script>
+	<link rel="stylesheet" href="js/codemirror/lib/codemirror.css">
+	<script src="js/codemirror/mode/javascript/javascript.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/mode/simple.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/search/search.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/search/searchcursor.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/dialog/dialog.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/search/jump-to-line.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/scroll/simplescrollbars.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/search/matchesonscrollbar.js"></script>
+	<script type="text/javascript" src="js/codemirror/addon/scroll/annotatescrollbar.js"></script>
+
+</head>
+<body>
+	<div id="toast" class="toast hidden">Loaded code!</div>
+	<div id="toolbar" class="disable-selection">
+		<i class="material-icons-outlined md-24" id="new-file--button">note_add</i>
+		<i class="material-icons-outlined md-24" id="open-file--button">open_in_browser</i>
+		<i class="material-icons-outlined md-24" id="save-file--button">save_alt</i>
+		<i class="material-icons-outlined md-24" id="share-file--button">share</i>
+		<span class="divider nomob"></span>
+		<i class="material-icons-outlined md-24" id="undo--button">undo</i>
+		<i class="material-icons-outlined md-24 disabled" id="redo--button">redo</i>
+		<span class="divider nomob"></span>
+		<i class="material-icons-outlined md-24" id="search--button">search</i>
+		<i class="material-icons-outlined md-24" id="goto--button">my_location</i>
+		<span class="divider"></span>
+		<i class="material-icons-outlined md-24" id="assemble--button">offline_bolt</i>
+		<i class="material-icons-outlined md-24 disabled" id="listing--button">list_alt</i>
+		<i class="material-icons-outlined md-24 disabled" id="emulate--button">fast_forward</i>
+		<i class="material-icons-outlined md-24" id="insert-breakpoint--button">fiber_manual_record</i>
+		<span class="divider nomob"></span>
+		<i class="material-icons-outlined md-24" id="indent-now--button">format_indent_increase</i>
+		<i id="autoindent-enable--button" class=""> 
+			<b class="material-icons-outlined md-24">format_indent_increase</b>
+			<b class="material-icons-outlined md-18">autorenew</b>
+		</i>
+
+		<i class="material-icons-outlined md-24 last">help_outline</i>
+		<i class="material-icons-outlined md-24" id="more-menu--button">more_vert</i>
+	</div>
+
+	<div id="more-menu" class="disable-selection hidden">
+		<span id="about--button">About</span>
+		<span id="bug-report--button">Report a bug</span>
+	</div>
+
+	<div id="about" class="modal disable-selection hidden">
+		<span class="header">About mode85<span class="material-icons-outlined md-18">close</span></span>
+		<span class="buttons">
+			<button type="reset" id="about--cancel-button">Close</button>
+		</span>
+	</div>
+
+	<div id="bug-report" class="modal hidden">
+		<span class="header disable-selection">Report a bug...<span class="material-icons-outlined md-18">close</span></span>
+		<span class="buttons disable-selection">
+			<button type="reset" id="bug-report--cancel-button">Close</button>
+		</span>
+	</div>
+
+	<div id="open-file" class="modal disable-selection hidden">
+		<span class="header">Open File<span class="material-icons-outlined md-18">close</span></span>
+		<input type="file" id="file-uploader" name="file-upload"/>
+		<span id="open-file--warn" class="warn"></span>
+		<span class="buttons">
+			<button type="reset" id="open-file--cancel-button">Cancel</button>
+			<button type="submit" id="open-file--submit-button" disabled="true">Open</button>
+		</span>
+	</div>
+
+	<div id="save-file" class="modal disable-selection hidden">
+		<span class="header">Save File<span class="material-icons-outlined md-18">close</span></span>
+		<label for="save-file--filename" class="padleft">Name</label>
+		<input type="text" id="save-file--filename" placeholder="filename.a85" /><br/><br/>
+		<input type="checkbox" id="save-file--unroll-dup"/> 
+		<label for="save-file--unroll-dup">
+			Unroll DUPs
+		</label><br/>
+		<input type="checkbox" id="save-file--expand-macro"/> 
+		<label for="save-file--expand-macro">
+			Expand MACROs
+		</label><br/>
+		<span class="buttons">
+			<button type="reset" id="save-file--cancel-button">Cancel</button>
+			<button type="submit" id="save-file--submit-button">Save</button>
+		</span>
+		<span id="save-file--warn" class="warn"></span>
+	</div>
+
+	<div id="new-file" class="modal disable-selection hidden">
+		<span class="header">New File<span class="material-icons-outlined md-18">close</span></span>
+		<span class="text">Delete this document and create a new document?</span>
+		<span class="buttons">
+			<button type="reset" id="new-file--cancel-button">Cancel</button>
+			<button type="submit" id="new-file--submit-button">Yes, I'm Sure</button>
+		</span>
+	</div>
+
+
+	<div id="modal-shade" class="hidden"></div>
+	
+	<div id="sidebar" class="sidebar hidden">
+		<span id="label" class="disable-selection">Assembled listing<i id="sidebar--close-button" class="material-icons-outlined md-18">close</i></span>
+		<table id="listing-table">
+			<tr><td class="disable-selsudo sh -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/packages.microsoft.gpg] https://packages.microsoft.com/repos/vscode stable main" > /etc/apt/sources.list.d/vscode.list'ection">Assemble to see listing</td></tr>
+		</table>
+	</div>
+
+	<textarea id="code-editor"></textarea>
+	<div id="mobile-code-editor"></div>
+	<div id="tabber">
+		<div id="tabber-tabs" class="disable-selection">
+			<span id="tabber-tabs--logs" class="tabber-tabs--tab active" onclick="tabberShowPanel('logs')">
+				Logs
+			</span>
+			<span id="tabber-tabs--preprocessor" class="tabber-tabs--tab" onclick="tabberShowPanel('preprocessor')">
+				Preprocessor
+			</span>
+			<span id="tabber-tabs--debug" class="tabber-tabs--tab" onclick="tabberShowPanel('debug')">
+				Debugging and Tables
+			</span>
+		</div>
+		<div class="tabber-view" id="tabber-view--logs">
+		</div>
+		<div class="tabber-view disable-selection hidden" id="tabber-view--preprocessor">
+			<span class="tabber-view--top-banner">
+				<input type="checkbox" id="preprocessor-view--isEnabled" checked="true" disabled="true">
+				<label for="preprocessor-view--isEnabled">Enable Preprocessing during assembly</label>
+			</span>
+			<span class="tabber-view--top-banner-compensator">&nbsp;</span>
+			<span class="tabber-view--container">
+				<span class="label">Upcoming feature</span>
+				<span>These options will be supported in an upcoming version!</span>
+			</span>
+			<span class="tabber-view--container">
+				<span class="label">Manual Controls</span>
+				<button id="preprocessor-view--doPreprocess" disabled="true">Preprocess</button>
+				<button id="preprocessor-view--doRevert" disabled="true">Revert</button>
+			</span>
+			<span class="tabber-view--container">
+				<span class="label">Options</span>
+				<input type="checkbox" id="preprocessor-view--isDup" checked="true" disabled="true"/>&nbsp;<label for="preprocessor-view--isDup">Allow expansion of DUPs</label> <br/>
+				<input type="checkbox" id="preprocessor-view--isMacro" checked="true" disabled="true"/>&nbsp;<label for="preprocessor-view--isMacro">Allow expansion of MACROs</label> <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="preprocessor-view--isMangle" checked="true" disabled="true"/>&nbsp;<label for="preprocessor-view--isMacro">Mangle macro locals <br class="mob"/>starting with a "/"</label> <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="checkbox" id="preprocessor-view--isDetectLoop" disabled="true"/>&nbsp;<label for="preprocessor-view--isDetectLoop">Detect loops</label> <br/>
+				<input type="checkbox" id="preprocessor-view--isExperimental" disabled="true"/>&nbsp;<label for="preprocessor-view--isExperimental" >Enable Experimental Features</label> <br/>
+			</span>
+				<br/>
+				<br/>
+				<br/>
+		</div>
+		<div class="tabber-view hidden" id="tabber-view--debug">
+			<span class="tabs disable-selection" id="tabber-debug--tabs">
+				<span class="tab debug-tab--tabs active" id="debug-tab--references-tab">References</span>
+				<span class="tab debug-tab--tabs " id="debug-tab--symtab-tab">Symbol Table</span>
+				<span class="tab debug-tab--tabs" id="debug-tab--breakpts-tab">Breakpoints</span>
+				<span class="tab debug-tab--tabs  disabled" id="debug-tab--condasm-tab">Conditional Assembly</span>
+			</span>
+			<span class="tabs-compensator"></span>
+			<div class="view debug-tab--views" id="debug-tab--references">
+				<div class="full">
+					<table id="references-listing">
+						<tr><th>Line</th><th>Label</th><th>Assembled address</th></tr>
+						<tr><td colspan="3" style="text-align: center;">Assemble to compute references</td></tr>
+					</table>
+				</div>
+			</div>
+			<div class="view debug-tab--views hidden" id="debug-tab--symtab">
+				<table id="symbol-table">
+					<tr><th>Symbol</th><th>Value</th><th>Replaced in lines</th></tr>
+					<tr><td colspan="3" style="text-align: center;">Assemble to populate symbol table</td></tr>
+				</table>
+			</div>
+			<div class="view debug-tab--views hidden" id="debug-tab--breakpts">
+				<table id="breakpts-table">
+					<tr><th>Breakpoint at line</th><th class="disabled">After Instruction</th></tr>
+					<tr><td colspan="3" style="text-align: center;">Assemble to poplulate breakpoints</tr>
+				</table>
+			</div>
+			<div class="view debug-tab--views hidden" id="debug-tab--condasm">
+				Coming Soon!
+			</div>
+		</div>
+	</div>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+	<script type="text/javascript" src="js/assembler/msgparser-en_gb.js"></script>
+	<script type="text/javascript" src="js/editor/editor.js"></script>
+	<script type="text/javascript" src="js/assembler/expr-eval.js"></script>
+	<!--<script type="text/javascript" src="js/assembler/textParser.js"></script>-->
+	<script type="text/javascript" src="js/assembler/asm.js"></script>
+	<script type="text/javascript" src="js/assembler/parser.js"></script>
+	<script type="text/javascript" src="js/assembler/assembler.js"></script>
+	<script type="text/javascript" src="js/assembler/macro.js"></script>
+	<script type="text/javascript" src="js/assembler/conditional.js"></script>
+	<script type="text/javascript" src="js/assembler/dup.js"></script>
+	<script type="text/javascript" src="js/assembler/comment.js"></script>
+	<script type="text/javascript" src="js/assembler/symbol.js"></script>
+	<!-- Runs after page load, checks for loaded document -->
+	<script type="text/javascript">
+		(function() {
+			var url = window.location.href;
+			if(url.indexOf('?codeString=') == -1) {
+				return;
+			}
+			
+			var start = url.indexOf('?codeString=') + 12;
+			console.log("RECEIVED ", decodeURIComponent(url.slice(start)));
+			var obj = decodeURIComponent(url.slice(start)).toString().slice(1,-1).split('\\n').join('\n').split('\\"').join('"');
+
+			function setCode(text){
+				try {
+					flask.updateCode(text);
+					editor.doc.setValue(text);
+					console.log("setCode done");
+				} catch (err) {
+					console.log("Trying again!");
+					setTimeout(e => setCode(text), 80);
+				}
+			}
+			setCode(obj);
+
+			document.getElementById('toast').classList.remove('hidden');
+			window.setTimeout(()=>document.getElementById('toast').classList.add('hidden'), 2000);
+		})();
+	</script>
+</body>
+</html>

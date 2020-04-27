@@ -1,0 +1,23 @@
+          ORG F550H
+          DEFMEMWS 2
+          DEFMEM 15H
+          ORG F000H
+          LDA F500H
+          LXI H, F550H
+          MVI D, 64H
+          CALL DIV
+          MOV M, C
+          INX H
+          MVI D, 0AH
+          CALL DIV
+          MOV M, C
+          INX H
+          MOV M, A
+          HLT
+          ORG F100H
+     DIV: MVI C, FFH
+     LOP: INR C
+          SUB D
+          JNC LOP
+          ADD D
+          RET

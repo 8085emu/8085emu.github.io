@@ -1,10 +1,164 @@
+<!DOCTYPE html>
 <html>
-  <head>
-    <title>
-      Hello world!
-    </title>
-  </head>
-  <body>
-    <h1>HELLO WORLD!</h1>
-  </body>
+<head>
+	<title>8085 Emulator</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Condensed:400|Roboto+Mono:300,400,400i,700&display=swap" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="css/general.css">
+</head>
+<body>
+	<h1><b>8085•Neutrino</b> Runtime 
+		<a href="coder.html" id="assembler--button">ASSEMBLER</a>
+		<a class="material-icons md-24" id="open-file--button" onclick="openMemory()">open_in_browser</a>
+		<a class="material-icons md-24" id="save-file--button" onclick="saveMemory()">save_alt</a>
+		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>
+		<a class="material-icons md-24 mobile-only" id="menu--button" onclick="toggleMenu()">menu</a>
+	</h1>
+	<div id="menu" class="menu-hidden">
+		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>
+		<a class="material-icons md-24" id="save-file--button" onclick="saveMemory()">save_alt</a>
+		<a class="material-icons md-24" id="open-file--button" onclick="openMemory()">open_in_browser</a>
+		<a href="coder.html">ASSEMBLER</a>
+	</div>
+	<div id="load-code" class="toast hidden">Loaded code!</div>
+	<div id="toast" class="toast-black hidden">Loaded code!</div>
+
+	<div id="wrapper">
+	<div class="display-helper--container">
+		<div class="display">
+			<input onClick="this.select(); buttons.setMode('inputAddress');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-0" maxlength="1"  />
+			<input onClick="this.select(); buttons.setMode('inputAddress');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-1" maxlength="1"  />
+			<input onClick="this.select(); buttons.setMode('inputAddress');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-2" maxlength="1"  />
+			<input onClick="this.select(); buttons.setMode('inputAddress');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-3" maxlength="1"  />
+			<input onClick="this.select(); buttons.setMode('inputData');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-4" maxlength="1"  />
+			<input onClick="this.select(); buttons.setMode('inputData');" onfocus="blur();" class="display-cell" type="text" value="" id="data-input-5" maxlength="1"  />
+		</div>
+		<div class="helper-text">
+			<span class="helper" id="helper-main">
+				<b><span id="helper-microcode">Help Text</span></b>
+				<span id="complete-instruction">Help text about instructions will appear here.</span>
+			</span>
+		</div>
+		<div class="helper-text helper-text-description">
+			<span class="helper">
+				<b>	<span id="instr-heading"></span></b>
+				<span id="instr-description"></span>
+			</span>
+		</div>
+	</div>
+	<div class="register-buttons--container">
+		<div class="keypad-buttons--container">
+			<span class="keypad-button" ontouch="fix" id="button-C"> C </span>
+			<span class="keypad-button" onfocus="blur()" id="button-D"> D </span>
+			<span class="keypad-button" onfocus="blur()" id="button-E"> E </span>
+			<span class="keypad-button" onfocus="blur()" id="button-F"> F </span>
+			<span class="keypad-button" onfocus="blur()" id="button-8"> 8 </span>
+			<span class="keypad-button" id="button-9"> 9 </span>
+			<span class="keypad-button" id="button-A"> A </span>
+			<span class="keypad-button" id="button-B"> B </span>
+			<span class="keypad-button" id="button-4"> 4 </span>
+			<span class="keypad-button" id="button-5"> 5 </span>
+			<span class="keypad-button" id="button-6"> 6 </span>
+			<span class="keypad-button" id="button-7"> 7 </span>
+			<span class="keypad-button" id="button-0"> 0 </span>
+			<span class="keypad-button" id="button-1"> 1 </span>
+			<span class="keypad-button" id="button-2"> 2 </span>
+			<span class="keypad-button" id="button-3"> 3 </span>
+		</div>
+		<div class="extra-buttons--container">
+			<span class="extra-button" id="button-RES">  <u>R</u>ES  </span>
+			<span class="extra-button" id="button-INR">  <u>I</u>NR  </span>
+			<span class="extra-button" id="button-GO">   G<u>O</u>   </span>
+			<span class="extra-button" id="button-REG">  RE<u>G</u>  </span>
+			<span class="extra-button" id="button-SET">  <u>S</u>ET  </span>
+			<span class="extra-button" id="button-DCR">  D<u>C</u>R  </span>
+			<span class="extra-button" id="button-EXEC"> E<u>X</u>EC </span>
+			<span class="extra-button" id="button-STEP"> STE<u>P</u> </span>
+		</div>
+		<div class="registers--container">
+			<span class="register half" id="register-A"> <i> 00 </i> <em>H</em> <b>A</b>  </span>
+			<span class="register half" id="register-F"> <i></i>  
+				<span class="register-flags" id="flag-S">  0 </span>
+				<span class="register-flags" id="flag-Z">  0 </span>
+				<span class="register-flags empty">        X </span>
+				<span class="register-flags" id="flag-AC"> 0 </span>
+				<span class="register-flags empty">        X </span>
+				<span class="register-flags" id="flag-P">  0 </span>
+				<span class="register-flags empty">        X </span>
+				<span class="register-flags" id="flag-CY"> 0 </span>
+			</span> <br/>
+			<span class="register half" id="register-B"> <i> 00 </i> <em>H</em> <b>B</b>  </span>
+			<span class="register half" id="register-C"> <i> 00 </i> <em>H</em> <b>C</b>  </span> <br/>
+			<span class="register half" id="register-D"> <i> 00 </i> <em>H</em> <b>D</b>  </span>
+			<span class="register half" id="register-E"> <i> 00 </i> <em>H</em> <b>E</b>  </span> <br/>
+			<span class="register half" id="register-H"> <i> 00 </i> <em>H</em> <b>H</b>  </span>
+			<span class="register half" id="register-L"> <i> 00 </i> <em>H</em> <b>L</b>  </span> <br/>
+			<span class="register full" id="register-SP"><i>0000</i> <em>H</em> <b>SP</b> </span> <br/>
+			<span class="register full" id="register-PC"><i>0000</i> <em>H</em> <b>PC</b> </span>
+		</div>	
+	</div>
+	</div>
+	
+	<script type="text/javascript" src="js/assembler/expr-eval.js"></script>
+	<script type="text/javascript" src="js/assembler/textParser.js"></script>
+	<script type="text/javascript" src="js/assembler/preprocessor.js"></script>
+
+	<div id="pbus"></div>
+	<!-- No requires (Base requires) -->
+	<script type="text/javascript" src="js/base/pbus.js"></script>
+	<script type="text/javascript" src="js/base/details.js"></script>
+	<script type="text/javascript" src="js/base/memory.js"></script>
+	<script type="text/javascript" src="js/base/counter.js"></script>
+	<script type="text/javascript" src="js/base/conversion.js"></script>
+	<script type="text/javascript" src="js/base/microcodes.js"></script>
+
+	<!-- Requires one or more of baserequires (L0 requires) -->
+	<script type="text/javascript" src="js/hardware/registers.js"></script>
+	<script type="text/javascript" src="js/hardware/display.js"></script> <!-- Dependent on DOM -->
+	<script type="text/javascript" src="js/hardware/adder.js"></script>
+	<script type="text/javascript" src="js/hardware/logical.js"></script>
+	<script type="text/javascript" src="js/hardware/shifter.js"></script>
+
+	<!-- Requires one or more of L1 requires -->
+	<script type="text/javascript" src="js/manipulators/input.js"></script> <!-- Dependant on DOM-->
+	<script type="text/javascript" src="js/manipulators/keyboardHooks.js"></script> <!-- Dependant on DOM-->
+	<script type="text/javascript" src="js/manipulators/registerDisplay.js"></script>
+
+	<!-- Requires one or more of L2 requires -->
+	<script type="text/javascript" src="js/funcs/dict.js"></script>
+	<script type="text/javascript" src="js/funcs/dataMovement.js"></script>
+	<script type="text/javascript" src="js/funcs/arithmetic.js"></script>
+	<script type="text/javascript" src="js/funcs/logical.js"></script>
+	<script type="text/javascript" src="js/funcs/branch.js"></script>
+	<script type="text/javascript" src="js/funcs/stack.js"></script>
+
+	<!-- Requires one or more of L4 requires -->
+	<script type="text/javascript" src="js/runner/loader.js"></script>
+	<script type="text/javascript" src="js/runner/runner.js"></script>
+
+	<!-- For Reading and Saving files -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.min.js"></script>
+
+	<!-- Allow RST1 and RST5 and RST7 to halt program as in kit -->
+	<script type="text/javascript">
+		memory.writeAt('0008', 'C9');
+		memory.writeAt('0028', 'C9');
+		memory.writeAt('0038', 'C9');
+		displayCells.setAddress('READ');
+		displayCells.setData('Y!');
+		console.log("Fixed RSTs");
+
+		function toggleMenu() {
+			document.querySelector('#menu').classList.toggle('menu-hidden');
+		}
+	</script>
+
+	<input type="file" id="file-uploader" name="file-upload" style="height:10px !important; opacity: 0; pointer-events: none;"/>	
+
+	<!-- Implement sharing, saving, loading -->
+	<script src="js/emulator/stateSave.js"></script>
+</body>
 </html>

@@ -1,0 +1,22 @@
+Layer  : Lower Base:
+Dom
+
+Layer 0: Baselayer:
+  MIcrocodes    Conversion    COunter    Memory    Shifter    Debugregister
+
+Layer 1: Hardware:
+  Register         Display          Adder         Logical
+  (0: C, CO)       (0: M, CO; D)    (0: C)		  (0: C)
+
+Layer 2: Manipulators
+  Input
+  (0:C, M; 1: R, D)
+
+Layer 3: Function Dictionary
+  Dict
+
+Layer 4: Functions
+  DataMovement (0: C, CO, M; 1: R; 3: D)
+
+Layer 5: Runner and loader
+  Runner (*:*), Loader(0:M, D)

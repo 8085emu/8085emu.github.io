@@ -1,0 +1,14 @@
+      L1: MACRO A
+          ECHO A
+          ECHO 50
+          ENDM
+      L2: MACRO B, C
+          ECHO C
+      L3: MACRO F
+     /L5: ECHO F
+          ECHO F
+          ENDM
+          L3 B
+          ENDM
+          L1 A
+    APPL: L2 B 10
