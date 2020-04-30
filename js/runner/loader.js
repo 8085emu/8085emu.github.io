@@ -40,6 +40,13 @@ loader.extractAsByte = function () {
 
 window.addEventListener('load', (e) => {
 	var url = window.location.href;
+
+	if(url.indexOf('?codeString=') != -1) {
+		var start = url.indexOf('?codeString=') + 12;
+		window.location = window.origin + '/coder.html?codeString=' + url.slice(start);
+		return;
+	}
+
 	if(url.indexOf('?listing=') == -1) {
 		return;
 	}
