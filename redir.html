@@ -11,18 +11,19 @@
 
       var path = window.location.href;
       var a = document.createElement('a');
-      var keyString = 'neutrinoURLRedir/';
+      var keyString = '?';
       var appPath = 'therdas://neutrinoRuntime';
       var query = path.slice(path.indexOf(keyString) + keyString.length);
       
       if(isAndroid) {
-        a.href = appPath + query;
+        a.href = appPath + '/?' + query;
         a.textContent = 'If the app did not open automatically, click this link to open it...';
         document.querySelector('body').appendChild(a);
-        a.click();
-        setTimeout( e => {
+        window.location = appPath + '/?' + query;
+        window.alert("Replaced!");
+        /*setTimeout( e => {
           window.location.replace("https://play.google.com");
-        }, 1000);
+        }, 1000);*/
       }
     </script>
   </body>
