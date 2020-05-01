@@ -703,13 +703,15 @@ window.onload = function(e) {
 			}
 		});
 	flask.updateLanguage('8085asm');
-
-
+	editor.setValue("          ORG F000\n          ;The ORG statement\n          ;loads code starting\n          ;from f000\n\n          ;Enter you code after\n          ;this line\n   START: ");
+	flask.updateCode("ORG F000\n;The ORG statement\n;loads code starting\n;from f000\n\n;Enter you code after\n;this line\n");
 };
 
 const mq = window.matchMedia("(max-width: 910px)");
 mq.addListener(widthChange);
 widthChange(mq);
+
+var firstTimeWidthChange = true;
 
 function widthChange(mq) {
 	try {
@@ -717,11 +719,23 @@ function widthChange(mq) {
 			console.log("Mobile");
 			usingFlask = true;
 
+			//Only for first time
+			if(firstTimeWidthChange === true) {
+				firstTimeWidthChange = false;
+				return;
+			}
+
 			//Sync document contents
 			flask.updateCode(editor.getValue());
 		} else {
 			console.log("Desktop");
 			usingFlask = false;
+
+			//Only for first time
+			if(firstTimeWidthChange === true) {
+				firstTimeWidthChange = false;
+				return;
+			}
 			editor.setValue(flask.getCode());
 			editor.refresh();
 		}

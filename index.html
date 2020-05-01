@@ -144,9 +144,9 @@
 
 	<!-- Allow RST1 and RST5 and RST7 to halt program as in kit -->
 	<script type="text/javascript">
-		memory.writeAt('0008', 'C9');
-		memory.writeAt('0028', 'C9');
-		memory.writeAt('0038', 'C9');
+		memory.writeAt('0008', '76');
+		memory.writeAt('0028', '76');
+		memory.writeAt('0038', '76');
 		displayCells.setAddress('READ');
 		displayCells.setData('Y!');
 		console.log("Fixed RSTs");

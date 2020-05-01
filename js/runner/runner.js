@@ -70,10 +70,11 @@ runner.runFrom = function (from, step) {
 				dict[instrName](instr);
 			}
 		}
-		if(instrName == 'HLT' && step != 1) {
+		if(instrName == 'HLT') {
 			halt = true;
 			displayCells.setAddress('SUCC');
 			displayCells.setData('ES');
+			buttons.mode = "invalid";
 		} else {
 			displayCells.setAddress(registers.PC);
 			displayCells.setDataFromMemoryAtAddr();
