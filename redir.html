@@ -34,7 +34,7 @@
     		height: 150px;
     		position: relative;
     		background-color: rgba(0,253,214,0.8);
-    		border-radius: 50px;
+    		border-radius: 150px;
     		box-shadow: 0 5px 25px rgba(0,253,214,0.3), 0 5px 10px rgba(0,253,214,0.3), 0 0 50px rgba(0,253,214,0.1);
             margin-top: 8vh;
             margin-bottom: 1em;
@@ -55,10 +55,32 @@
         #gpbutton {
             display: inline-block;
             text-align: center;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            width: 11.22em;
+            height: 3.25em;
+            border-radius: 4px;
+            margin-bottom: 1em;
+            margin-top: 1em;
         }
 
         #gpbutton > img {
+            display: inline-block;
+            position: absolute;
             height: 5em;
+            top: -14px;
+            left: -14px;
+        }
+
+        #gpbutton:hover {
+            box-shadow: 0 2px 20px rgba(0,0,0,0.75);
+            transition: all 0.1s ease-in-out;
+
+        }
+        #gpbutton:active {
+            box-shadow: 0 2px 20px 4px rgba(0,0,0,1);
+            color: rgba(0,0,0,0.8);
         }
 
         .actionButton {
@@ -103,26 +125,50 @@
         a.classList.add("actionButton");
         var keyString = '?';
         var appPath = 'therdas://neutrinoRuntime';
-        var query = path.slice(path.indexOf(keyString) + keyString.length);
+        var query;
+        var flagNoRedir = false;
+
+        if(path.slice(-9) == '(noredir)') {
+            flagNoRedir = true;
+        }
+
+        if(path.indexOf(keyString) !== -1) {
+            query = path.slice(path.indexOf(keyString) + keyString.length);
+            if(flagNoRedir) {
+                query = query.slice(0,-9);
+            }
+        } else {
+            query = "";
+        }
 
         if(isAndroid) {
             a.href = appPath + '/?' + query;
             a.textContent = 'Open in app';
             document.querySelector('body').appendChild(a);
-            //window.location = appPath + '/?' + query;
-        } else {
-            //window.location = window.location.origin+'/'+query;
+            if(!flagNoRedir)
+                window.location = appPath + '/?' + query;
         }
 
         var aw = document.createElement('a');
         aw.classList.add("actionButton");
-        var wkeyString = '?';
         var wappPath = window.location.origin;
-        var wquery = path.slice(path.indexOf(wkeyString) + wkeyString.length);
       
-        aw.href = wappPath + '/?' + wquery;
+        aw.href = wappPath + '/?' + query;
         aw.textContent = 'Open in webapp';
         document.querySelector('body').appendChild(aw);
+
+        if(!isAndroid && !flagNoRedir){
+            aw.textContent = 'Opening in webapp in 3s';
+            setTimeout( e => {
+                aw.textContent = "Opening in webapp in 2s";
+            },1000);
+            setTimeout( e => {
+                aw.textContent = "Opening in webapp in 1s";
+            },2000);
+            setTimeout( e => {
+                window.location = window.location.origin+'/?'+query;
+            }, 3000);
+        }
 
     </script>
   </body>
