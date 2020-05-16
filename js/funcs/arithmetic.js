@@ -7,7 +7,7 @@ dict['ADD'] = function(instr) {
 	var augend = registers.getRegister('A');
 	var nameAddend = template[1];
 	var addend = nameAddend == 'M' ? memory.readFrom(registers.getPair('H')) : registers.getRegister(nameAddend);
-	var result = adder.adder(augend, addend, 0);
+	var result = adder.adder(augend, addend, "0");
 
 	registers.setRegister('A', result.sum);
 	registers.setFlag('CY', result.flags.carry);

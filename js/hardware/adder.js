@@ -27,7 +27,7 @@ adder.adder = function (x, y, carry) {
 	var b = "";
 	var c = carry;
 	var ac = false;
-	var n = false;
+	var n = 0;
 	var isZero = true;
 
 	for(var i = x.bin.length - 1; i >= 0; --i) {
@@ -35,7 +35,7 @@ adder.adder = function (x, y, carry) {
 		b = y.bin[i];
 
 		var s = '';
-
+		console.log("adding ", a, "&", b);
 		if(a == '0' && b == '0' && c == '0') {				// 0 0 0 => 0 0
 			c = '0';
 			s = '0';
@@ -65,7 +65,7 @@ adder.adder = function (x, y, carry) {
 			s = '1';
 			isZero = false; ++n;
 		}
-
+		console.log("got ", c, ":", s);
 		if((x.bin.length == 8 && i == 4 && c == '1') || (x.bin.length == 16 && i == 12 && c == '1'))
 			ac = true;
 
