@@ -23,6 +23,14 @@ html, body {
 	margin: 0;
 	background-color: rgb(15%,17%,16%);
 	color: white;
+
+	-webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 br {
@@ -616,6 +624,7 @@ h1 > a:active {
 		padding: 1.25em;
 		color: rgba(0,0,0,0.8);
 		text-decoration: none;
+		cursor: pointer;
 	}
 
 	.menu-hidden {
@@ -626,4 +635,158 @@ h1 > a:active {
 	#menu > a:hover {
 		background-color: rgba(0,0,0,0.2);
 	}
+
+	.modal {
+		width: 100vw;
+		box-sizing: border-box;
+		min-width: 0;
+		border-radius: 0;
+		max-height: 100vh;
+	}
+
+	#modal-shade {
+		background-color: rgba(0,0,0,0.8);
+	}
+}
+
+
+.modal {
+	display: block;
+	position: fixed;
+	top: 50vh;
+	left: 50vw;
+	transform: translateY(-50%) translateX(-50%);
+	z-index: 100;
+	padding-bottom: 5em;
+	min-width: 30em;
+	background-color: #202725;
+	border-radius: 15px;
+	box-shadow: 0 10px 15px rgba(0,0,0,0.5), 0 0 25px rgba(0,0,0,0.2);
+	transition: opacity 0.1s ease-in-out;
+	opacity: 1;
+}
+
+.modal > span.header {
+	display: block;
+	padding: 1.2em;
+	font-size: 1em;
+	position: relative;
+}
+
+.modal > span.header > span {
+	position: absolute;
+	right: 0.6em;
+	top: 0.6em;
+	padding: 0.65em;
+	border-radius: 50%;
+	transition: all 0.1s ease-in-out;
+}
+
+.modal > span.header > span:hover {
+	background-color: rgba(0,0,0,0.5);
+}
+
+.modal > .buttons {
+	display: block;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	padding: 1em;
+	font-size: 1em;
+	text-align: right;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.modal button:first-child {
+	margin-left: auto;
+	background-color: transparent;
+
+}
+
+.modal button {
+	display: inline-block;
+	outline: none;
+	border: none;
+	font-size: 1em;
+	font-family: 'Roboto', sans-serif;
+  padding: 0.7em 1em;
+  border-radius: 4px;
+  color: rgba(255,255,255,0.9);
+  background:none;
+  text-decoration: underline;
+  transition: all 0.1s ease-in-out;
+  background-color: rgb(0,253,214);
+}
+
+.modal button:disabled{
+	opacity: 0.3;
+}
+
+.modal button:last-child {
+	outline: none;
+	border: none;
+	font-size: 1em;
+	font-family: 'Roboto', sans-serif;
+  padding: 0.7em 1em;
+  border-radius: 4px;
+  text-decoration: none;
+
+  color: rgba(0,0,0,0.9);
+  background-color: rgb(0,253,214);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  transition: all 0.1s ease-in-out;
+}
+
+.modal button:hover {
+   background-color: rgb(0,213,174);
+   box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+   color: rgba(0,0,0,0.8);
+   text-decoration: none;
+}
+
+.modal button:active  {
+   background-color: rgba(0,213,174,0.7);
+   color: rgba(0,0,0,0.8);
+   text-decoration: none;
+   transition: none;
+}
+
+.modal.hidden {
+	opacity: 0;
+	pointer-events: none;
+}
+.disable-selection {
+	-webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Opera and Firefox */
+}
+
+.modal >iframe {
+	outline: none;
+	border: 0;
+	width: 100%;
+	color: white;
+	height: 450px;
+	max-height: calc(100vh - 130px);
+}
+
+#modal-shade {
+	z-index: 99;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background-color: rgba(0,0,0,0.3);
+	transition: opacity 0.2s ease-in-out;
+}
+
+#modal-shade.hidden {
+	opacity: 0;
+	pointer-events: none;
 }

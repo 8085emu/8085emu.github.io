@@ -10,14 +10,16 @@
 	<link rel="stylesheet" type="text/css" href="css/general.css">
 </head>
 <body>
-	<h1><b>8085•Neutrino</b> Runtime 
+	<h1 class="disable-selection"><b>8085•Neutrino</b> Runtime 
 		<a href="coder.html" id="assembler--button">ASSEMBLER</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="openMemory()">open_in_browser</a>
 		<a class="material-icons md-24" id="save-file--button" onclick="saveMemory()">save_alt</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>
+		<a class="material-icons md-24" id="open-help--button" onclick="showHelp()">help_outline</a>
 		<a class="material-icons md-24 mobile-only" id="menu--button" onclick="toggleMenu()">menu</a>
 	</h1>
-	<div id="menu" class="menu-hidden">
+	<div id="menu" class="menu-hidden disable-selection">
+		<a class="material-icons md-24" id="open-help--button" onclick="showHelp()">help_outline</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>
 		<a class="material-icons md-24" id="save-file--button" onclick="saveMemory()">save_alt</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="openMemory()">open_in_browser</a>
@@ -101,6 +103,17 @@
 		</div>	
 	</div>
 	</div>
+
+	<div id="helpModal" class="modal disable-selection hidden">
+		<span class="header"><span class="material-icons md-18" onclick="closeHelp()">close</span></span>
+		<iframe src="helptext.html"></iframe>
+		<span class="buttons">
+			<button type="reset" onclick="askHelp()">Ask Question</button>
+			<button type="reset" onclick="closeHelp()">Close</button>
+		</span>
+	</div>
+		
+	<div id="modal-shade" class="hidden" onclick="closeHelp()"></div>
 	
 	<script type="text/javascript" src="js/assembler/expr-eval.js"></script>
 	<script type="text/javascript" src="js/assembler/textParser.js"></script>
@@ -153,6 +166,22 @@
 
 		function toggleMenu() {
 			document.querySelector('#menu').classList.toggle('menu-hidden');
+		}
+
+		function showHelp() {
+			document.querySelector("#helpModal").classList.remove('hidden');
+			document.querySelector('#modal-shade').classList.remove('hidden');
+		}
+
+		function closeHelp() {
+			document.querySelector("#helpModal").classList.add('hidden');
+			document.querySelector('#modal-shade').classList.add('hidden');
+		}
+		function askHelp() {
+			var a = document.createElement('a');
+			a.href = "mailto:therealrdas@gmail.com?subject=NEUTRINO%20Help%20Needed&body=Enter%20your%20query%20here%3A%0A";
+			a.target = "_blank";
+			a.click();
 		}
 	</script>
 

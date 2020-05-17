@@ -94,13 +94,11 @@ function correctIndentation() {
 function showMenu(event) {
 	document.querySelector('#more-menu').classList.remove('hidden');
 	document.getElementById('modal-shade').classList.remove('hidden');
-	document.getElementById('modal-shade').style.opacity = '0';
 
 
 	var wrapperHM = function (e) {
 		hideMenu();
 		document.getElementById('modal-shade').classList.add('hidden');
-		document.getElementById('modal-shade').style.opacity = '';
 		document.querySelector('#modal-shade').removeEventListener('click', wrapperHM);
 	}
 
@@ -144,13 +142,33 @@ function showModal(name) {
 
 	document.querySelector('#modal-shade').addEventListener('click', wrapperHM);
 
-	document.getElementById(name)
-			.querySelector('.buttons > button:first-child')
-			.addEventListener('click', wrapperHM);
+	if(name == "helpModal") {
+		document.getElementById(name)
+				.querySelector('.buttons > button:last-child')
+				.addEventListener('click', wrapperHM);
 
-	document.getElementById(name)
-			.querySelector('.header > span')
-			.addEventListener('click', wrapperHM);
+		document.getElementById(name)
+				.querySelector('.buttons > button:first-child')
+				.addEventListener('click', function(e) {
+					var a = document.createElement('a');
+					a.href = "mailto:therealrdas@gmail.com?subject=NEUTRINO%20Help%20Needed&body=Enter%20your%20query%20here%3A%0A";
+					a.target = "_blank";
+					a.click();
+					console.log("dundun")
+				});
+
+		document.getElementById(name)
+				.querySelector('.header > span')
+				.addEventListener('click', wrapperHM);
+	} else {
+		document.getElementById(name)
+				.querySelector('.buttons > button:first-child')
+				.addEventListener('click', wrapperHM);
+
+		document.getElementById(name)
+				.querySelector('.header > span')
+				.addEventListener('click', wrapperHM);
+	}
 }
 
 function readFile(event) {
@@ -355,6 +373,7 @@ document.querySelector('#goto--button').addEventListener('click', (e) => goto())
 document.querySelector('#file-uploader').addEventListener('change', readFile);
 document.querySelector('#share-file--button').addEventListener('click', shareFile);
 
+document.querySelector('#help-modal--button').addEventListener('click', (e)=> {showModal('helpModal'); hideMenu()});
 document.querySelector('#about--button').addEventListener('click', (e)=> {showModal('about'); hideMenu()});
 document.querySelector('#bug-report--button').addEventListener('click', (e)=> {showModal('bug-report'); hideMenu()});
 /*Panel funcs*/

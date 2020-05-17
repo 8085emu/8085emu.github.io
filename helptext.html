@@ -1,0 +1,69 @@
+<html>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style>h1,h2,h3{font-family: sans-serif-condensed, 'Roboto Condensed';}body{padding:0; margin: 0;font-family: 'Roboto', sans-serif; overflow-x: hidden;}h1{padding-left:0.75em; padding-top: 0.75em;font-size: 1.5em;margin-bottom: 0; color: rgb(0,170,154);}div{border-bottom-right-radius:15px;border-bottom-left-radius:15px;display: block;box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1em 0}div>h3{margin: 0;color: rgba(0,170,154,1); text-transform: uppercase; padding: 0.5em 1.2em;font-size: 1em;}div>span{display:block; padding: 0.9em 1.2em;}div>div{display: inline-block;}div>span>span.caution{background-color: rgba(253, 216, 53,0.3); display: block;margin-left: -1.1em;padding:1em;width: 100%;margin-top: 1em;}.keybrd{display: inline-block; padding: 0.5em 0.75em;border-radius: 50px;background-color: rgba(0,170,154,0.25);font-weight: 600;box-shadow: 0 2px 4px rgba(0,70,54,0.1); color: rgb(0,170,154); margin: 0 0.5em;}ol{padding-left:0 !important;list-style: none;counter-reset:dr;}li{counter-increment: dr;}li::before{display:inline-block; content:counter(dr); background-color: rgba(0,170,154,0.1);padding: 0.5em 0.75em; border-radius: 50%;margin-right: 1em;margin-left: -3em;}li{margin-bottom: 1em; display: block;padding-left: 3em;}body{color: rgba(255,255,255,0.9);}
+		/*light*/
+		/*Dark*/
+	</style>
+	<style>
+		.indicator{position: fixed;bottom:0;left:0;right:0;display:block;height:2px;border-top: 2px dashed #9d9d9d;opacity:0.5;}
+		.hidden{display: none !important;}
+	</style>
+	<body>
+		<h1>Help</h1>
+	
+		<div>
+			<h3>Entering hexadecimal values / opcodes into memory</h3>
+			<span>
+				To enter values into memory, follow these steps: 
+				<ol>
+					<li>Press <span class="keybrd">SET</span></li>
+					<li>Enter the address you want to start inputting at (Eg: F000)</li>
+					<li>Press <span class="keybrd">INR</span>(Increment)</li>
+					<li>Enter the data</li>
+					<li>Press <span class="keybrd">INR</span> to go to the next word in memory</li>
+					<li>Continue entering data and pressing <span class="keybrd">INR</span> until done</li>
+					<li>Press <span class="keybrd">RES</span>(Reset) when done</li>
+				</ol>
+			</span>
+		</div>
+		<div>
+			<h3>Entering data into memory</h3>
+			<span>
+				The procedure is the same as in the case of entering hexadecimal values or opcodes into memory.
+			</span>
+		</div>
+		<div>
+			<h3>Running Code</h3>
+			<span>
+				To run your code, follow these steps: 
+				<ol>
+					<li>Press <span class="keybrd">GO</span>(Execute From)</li>
+					<li>Enter the address you loaded your program at (Eg: F000)</li>
+					<li>Press <span class="keybrd">EXEC</span>(Execute Button)</li>
+				</ol>
+			</span>
+		</div>
+		<div>
+			<h3>Stepping through code</h3>
+			<span>
+				To step through code, follow these steps: 
+				<ol>
+					<li>Press <span class="keybrd">GO</span></li>
+					<li>Enter the address you loaded your program at (Eg: F000)</li>
+					<li>Instead of pressing <span class="keybrd">EXEC</span>, press <span class="keybrd">STEP</span> instead</li>
+					<li>If at any time you want the program to continue normally, press <span class="keybrd">EXEC</span></li>
+				</ol>
+				Tip: Swipe over to the Registers view to see the effect of your code in the emulator's registers. <br/>There's extra <span class="keybrd">STEP</span> and <span class="keybrd">EXEC</span> buttons there
+				<span class="caution">
+					This feature is implemented differently in different microprocessor kits, so this particular feature may <i>not</i> be implemented in your kit. Refer to the manual for more details.
+				</span>
+			</span>
+			
+		</div>
+		<div>
+			<h3>Setting breakpoints</h3>
+			<span>Using the <span class="keybrd">Create Breakpoint…</span> option from the <span class="keybrd">⋮</span> Menu creates a breakpoint that, in the Neutrino Runtime emulator, will cause the program to break at that point. After that you can step through the program. This will allow you to easily step through and check register contents at any point of the program without guessword.<br/><br/> You MUST step once before pressing, say, the <span class="keybrd">EXEC</span> button, as trying to execute it again would immediately trigger the breakpoint again.</span>
+		</div>
+		<span class="indicator"></span>
+	</body>
+</html>

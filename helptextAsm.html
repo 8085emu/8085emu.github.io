@@ -1,0 +1,392 @@
+<html>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<style>h1,h2,h3{font-family: sans-serif-condensed, 'Roboto Condensed';}body{padding:0; margin: 0;font-family: 'Roboto', sans-serif; overflow-x: hidden;}h1{padding-left:0.75em; padding-top: 0.75em;font-size: 1.5em;margin-bottom: 0; color: rgb(0,170,154);}div{border-bottom-right-radius:15px;border-bottom-left-radius:15px;display: block;box-shadow: 0 4px 6px rgba(0,0,0,0.1); padding: 1em 0}div>h3, h2{margin: 0;color: rgba(0,170,154,1); text-transform: uppercase; padding: 0.5em 1.2em;font-size: 1em;}h2{font-size: 1.2em; padding: 1em 1em 0 1em;}div>span{display:block; padding: 0.9em 1.2em;}div>div{display: inline-block;}div>span>span.caution{background-color: rgba(253, 216, 53,0.3); display: block;margin-left: -1.1em;padding:1em;width: 100%;margin-top: 1em;}.keybrd{display: inline-block; padding: 0.5em 0.75em;border-radius: 50px;background-color: rgba(0,170,154,0.25);font-weight: 600;box-shadow: 0 2px 4px rgba(0,70,54,0.1); color: rgb(0,170,154); margin: 0 0.5em;}ol{padding-left:0 !important;list-style: none;counter-reset:dr;}li{counter-increment: dr;}li::before{display:inline-block; content:counter(dr); background-color: rgba(0,170,154,0.1);padding: 0.5em 0.75em; border-radius: 50%;margin-right: 1em;margin-left: -3em;}li{margin-bottom: 1em; display: block;padding-left: 3em;}pre{background-color: rgba(0,0,0,0.1);padding: 0.5em; border-radius: 3px;font-family: 'Roboto Mono', monospace;font-size: 0.85em; word-wrap: break-word;white-space: pre-wrap;margin: 0.5em 0;}a{color: rgb(0,170,154);}body{color: rgba(255,255,255,0.9);}
+		/*light*/
+		/*Dark*/
+	</style>
+	<style>
+		.indicator{position: fixed;bottom:0;left:0;right:0;display:block;height:2px;border-top: 2px dashed #9d9d9d;opacity:0.5;}
+		.hidden{display: none !important;}
+	</style>
+	<body>
+		<h1>Help</h1>
+		<div>
+			<h3>About</h3>
+			<span>
+				Neutrino is a simple 8085 assembler written in plain ol' JavaScript. The goal while creating neutrino was to provide high level functionality but in a simple to use format, so that almost anyone can use it, while still allowing advanced use cases. Since the 8085 does not support any native support for relocatable code, neither does neutrino. However it does have other features to make up for it:
+				<ol>
+					<li>Symbols, in the form of EQUs</li>
+					<li>Multiple ways to EQU</li>
+					<li>Full parsing and expression solving, even at instruction level</li>
+					<li>Duplication using DUP</li>
+					<li>Conditional Assembly</li>
+					<li>A fully featured Macro system, with proper name mangling and recursion.</li>
+					<li>A simple, understandable language based on popular microprocessor texts on 8085, with duck-typing and automatic conversion from decimal numbers.</li>
+				</ol>
+			</span>
+		</div>
+		<h2>Basic Syntax</h2>
+		<div>
+			<h3>Structure of a statement</h3>
+			<span>
+				Every instruction in neutrino is of the form
+				<pre style="display: inline;">[label:]keyword [&lt;number|name&gt;[,&lt;number|name&gt;]].</pre> 
+				This simply means that there may be a label, which should always be followed by a colon, followed by a keyword to which this label points. The keyword may be any valid 8085 instruction, or any neutrino directive (which are discussed later).
+			</span>
+		</div>
+		<div>
+			<h3>Label</h3>
+			<span>
+				Labels should always be followed by a colon:
+				<pre style="display: inline;">MyLabel: …</pre>
+				Labels can generally be anything, and include anything, including numbers. However, some restrictions appply: 
+				<ol><li> Lables are case-sensitive, that is, <pre style="display: inline-block">MyLabel: …</pre> is different from <pre style="display: inline-block">mylabel: …</pre>
+				<li> A label must not be entirely made of numbers and the letters A, B, C, D, E or F (case-insensitive), as that might be confused with a number, due to neutrino's duck-typing.
+				</ol>
+
+				For best practises, it is recommended that you follow the same naming rule as is used in naming C variables, along with not using any proper <pre style="display: inline">name</pre>s, that is, the names of the registers (namely, a, b, c, d, e, h, l, sp, psw, pc)
+			</span>
+		</div>
+		<div>
+			<h3>Keywords</h3>
+			<span>
+				Every documented 8085 instruction is included in neutrino. In addition, keywords are not case-sensitive (unlike labels). That is, these are roughly equivalent:
+<pre>
+INR
+Inr
+inr</pre>
+			</span>
+		</div>
+		<div>
+			<h3>Numbers</h3>
+			<span>
+				Neutrino does two things that are different from a regular 8085 assembler, and both of these are to be more compatible with microprocessor textbooks (well, one of them is. The other is for convenience of people getting used to assembly for the first time.)
+				<ol>
+				<li> It assumes that any hexadecimal number is suffixed with a <pre style="display: inline;">h</pre> or a <pre style="display: inline;">H</pre>
+				<li> Any number that is
+					
+						<br/>• not suffixed with a <pre style="display: inline;">H</pre>, and
+						<br/>• able to be parsed as a decimal number (contains only the digits <pre style="display: inline;">0-9</pre>)
+						<br/>Is parsed as a decimal number, and is then converted into hexadecimal
+					
+				<li> If a number does <i>not</i> have a trailing <pre style="display: inline;">H</pre> and cannot be parsed as decimal, will be treated as hexadecimal, if possible.
+				<li> Otherwise neutrino throws an error.
+			</span>
+		</div>
+		<div>
+			<h3>The BRK Directive</h3>
+			<span>The <pre style="display: inline-block;">BRK</pre> Directive creates a breakpoint that, in the Neutrino Runtime emulator, will cause the program to break at that point. After that you can step through the program. However, you MUST step once before pressing, say, the <pre style="display: inline-block;">EXEC</pre> button, as trying to execute it again would immediately trigger the breakpoint again.</span>
+		</div>
+		<div>
+			<h3>The ORG Directive</h3>
+			<span>
+				The <pre style="display: inline;">ORG</pre> directive simply starts writing the following code from whatever address it is called with. It is not necessary, but in case it is not included, the program will be located starting from address <pre style="display: inline;">0000H</pre>. It is recommended you choose a higher address for <pre style="display: inline;">ORG</pre> as many kits will not allow writing in lower addresses which, usually, is occupied by monitor ROM.
+
+				Keep in mind that you can write two programs one after the other, with a <pre style="display: inline;">ORG</pre> directive with the same addresses. In that case, ORG will simply overwrite the previous contents, with a simple warning. The <i>Listing with Code</i> produced by your frontend will probably show duplicates, however, the actual listing will only have the part that overwrote the previous one.
+			</span>
+		</div>
+		<div>
+			<h3>A Sample Program</h3>
+			<span>
+				This is a simple example program to loop 100 times, and output the count to port 85h
+<pre>
+	MVI A, 64H
+  LOOP: OUT 85h 
+	DCR A
+	JNZ LOOP
+</pre>
+
+				This is another fully valid way to write the same program, albeit in a way that adheres less strictly to texts on the topic, utilizing neutrino's features:
+<pre>
+	mvi a, 100
+  LOOP: out 85h 
+	dcr a
+	jnz LOOP
+</pre>
+			</span>
+		</div>
+		<h2>Slightly advanced features of Neutrino</h2>
+		<div>
+			<h3>DUP</h3>
+			<span>
+			The <pre style="display: inline">DUP</pre> directive does exactly what its name suggests: <i>DUP</i> licate a block of code. The block below:
+<pre>
+DUP 4
+RAL
+ENDD
+</pre>
+		will be expanded into
+<pre>
+RAL
+RAL
+RAL
+RAL
+</pre>
+			<pre style="display: inline;">ENDD</pre> marks the end of a <pre style="display: inline;">DUP</pre> block. <pre style="display: inline;">DUP</pre>s also support an expression as their count, which we'll encounter later. Both <pre style="display: inline;">DUP</pre> and <pre style="display: inline;">ENDUP</pre> are equivalent to their lowercase counterparts, which is common to all directives. These can be used as simple looping constructs with the help of variables LINK section EQU and strings.
+			</span>
+		</div>
+		<div>
+			<h3>DEF, DDEF and DEFARR</h3>
+			<span>
+			The <pre style="display: inline;">DEF</pre>, <pre style="display: inline;">DDEF</pre> and <pre style="display: inline;">DEFARR</pre> directives are used to place data in memory <i>at assemble time</i>. That is, when you say initialize a emulator with the listing produced by neutrino, these data will be present in the memory along with the instructions. <pre style="display: inline;">DEF</pre> and co. do not take any arguments, that is, it isn't possible to place them anywhere you want in memory by just using this directive. You must use <pre style="display: inline;">ORG</pre> in conjunction with this directive to directly modify memory. You can, however, attach a label to the <pre style="display: inline;">DEF</pre> statement and use that as an address to the data:
+<pre>
+	org f500
+  data: def 50
+…
+	org f000
+	lxi h, data
+…
+</pre>
+			which produces the code
+<pre>
++--------+-----------+----+
+| Address|Instruction|Data|
++--------+-----------+----+
+|  F500  |           |  32|
+|    …   |     …     |  … |
+|  F000  |LXI H, F500|  21|
+|  F001  |           |  00|
+|  F002  |           |  F5|
++--------+-----------+----+
+</pre>
+			Keep in mind however, if you overwrite any memory previously occupied by instructions, neutrino will warn you, but will <b>not</b> throw an error. This is (currently) by arbitrary design.  
+			</span>
+			<h3>DEF</h3>
+			<span>
+				This simply creates a byte with the given data (or whatever the expression passed to it resolves to) in memory at the point where the Address Pointer is at that line. That is, if a byte <pre style="display: inline;">XX</pre> is used, it will insert <pre style="display: inline;">XX</pre> into memory at the location where, if there was instead a one byte instruction like <pre style="display: inline;">MOV</pre>, an instruction would go.
+			</span>
+			<h3>DDEF</h3>
+			<span>
+				Same as <pre style="display: inline;">DEF</pre> but declares a double-word (two bytes) in little-endian fashion.
+			</span>
+			<h3>DEFARR</h3>
+			<span>
+				Same as <pre style="display: inline;">DEF</pre> but takes a comma separated list, and places them one by one in memory.
+			</span>
+		</div>
+		<h2>Advanced Features of Neutrino</h2>
+		<div>
+			<h3>EQU/= or Symbols</h3>
+			<span>
+				<pre>
+[label:] equ value ;or
+label = value
+</pre>
+
+A standard feature of most assemblers is to provide symbols, or what we generally call variables, to aid programming. For example: 
+<pre>
+  port: equ 86h
+		…
+	mvi a, 1 ;signal external device 
+	out port
+		…
+</pre>
+
+Symbols can be declared only in two ways:
+1. <i>Decimal</i>, in this case the value will be in decimal
+  This mode allows full arithmetic and/or algebraic equations
+2. <i>Hexadecimal</i>, in this case the value will be in hexadecimal
+  No arithmetic is allowed <i>only in declaration</i> of this kind. However, you can use these symbols for expressions in other places perfectly well.
+
+For example, the following code is invalid:
+<pre>
+  port: equ f0 + 6	;invalid
+		…
+</pre>
+But the following is:
+<pre>
+  base: equ 80h
+  port: equ base + 6
+		…
+</pre>
+This is a <i>general rule</i> of the neutrino assembler: You cannot use hexadecimal and decimal in the same expression. Another <i>general rule</i>: You cannot do arithmetic with hexadecimal, period. You however, can push hexadecimal into variables and then use those variables.
+
+Labels are optional in this form of <pre style="display: inline-block">EQU</pre, however, you won't be able to use those variables.
+
+Another form of the <pre style="display: inline-block">EQU</pre> statement is as follows:
+<pre>
+variableName = value
+</pre>
+Both are equivalent
+			</span>
+			<h3>EQU and Arrays</h3>
+			<span>
+				<pre style="display: inline-block">EQU</pre> handles arrays exactly like constant literal arrays in other C-like languages. Constant means no modification after you declare them, or insertion/deletion of values. They are there solely for P.O.D. reasons:
+<pre>
+    arr = [4,3,2,1]
+	mvi a, arr[2]	;equivalent to mvi a, 3
+</pre>
+A sharp symbol <pre style="display: inline-block">#</pre> signifies length, that is, saying <pre style="display: inline-block">#arr</pre> will give you the length of the array.
+<pre>
+    arr = [4,3,2,1]
+	mvi a, #arr	;equivalent to mvi a, 4
+</pre>
+Some general constraints for arrays are:
+1. Arrays must have atleast a single element, or the <pre style="display: inline-block">EQU</pre> statement will fail.
+2. Empty elements (just commas without values) are simply skipped over.
+3. An array cannot contain of only empty elements(<pre style="display: inline-block">[,,]</pre> is invalid)
+			</span>
+			<h3>EQU and Strings</h3>
+			<span>
+				<pre style="display: inline-block">EQU</pre> can easily handle strings. It first converts the string into an array of its ascii values and then uses that.
+<pre>
+    arr = "hello"
+	mvi a, arr[2]	;equivalent to mvi a, 6CH
+	mvi b, #arr 	;equivalent to mvi b, 05H
+</pre>
+Unlike arrays, string literal arrays cannot be used in expressions. You have to separately declare them first.
+			</span>
+			<h3>Expression Format</h3>
+			<span>
+				The expression evaluation engine is <a href="https://github.com/silentmatt/">silentmatt</a>'s excellent <a href="https://github.com/silentmatt/expr-eval">expr-eval</a> and supports everything that supports, with the addition of strings as arrays.
+			</span>
+			<h3>An assemble-time string output program</h3>
+			<span>
+				The following program outputs a string to port <pre style="display: inline-block">86H</pre>:
+<pre>
+	port = 86H 			;We output to port 86H
+
+	str = "hello"			;The string to output is hello
+	i = 0				;This is our counter, or index, into the string
+	
+	;The following part does this:
+	;First it outputs the current element in the string(array)
+	;Then it increments the count
+	;this works as arithmetic/algebraic equations are fully supported
+	;in EQU statements *as long as* they do not contain any hexadecimal
+	;literals
+	DUP #str 			;Duplicate statements length of str times
+	out str[i]			;Output the element
+	i = i + 1			;increment index
+	ENDD
+	
+	hlt					;and halt
+ </pre>
+ This generates the following code:
+ <pre>
++--------+-----------+----+
+| Address|Instruction|Data|
++--------+-----------+----+
+|  0000  | out 68H   |  D3|
+|  0001  |           |  68|
+|  0002  | out 65H   |  D3|
+|  0003  |           |  65|
+|  0004  | out 6CH   |  D3|
+|  0005  |           |  6C|
+|  0004  | out 6CH   |  D3|
+|  0005  |           |  6C|
+|  0004  | out 6FH   |  D3|
+|  0005  |           |  6F|
+|  0004  | hlt       |  76|
++--------+-----------+----+
+</pre>
+			</span>
+		</div>
+		<div>
+			<h3>If-Elif-Else or Conditionals</h3>
+			<span>
+				Neutrino supports if-elif-else conditionals. The general format is as follows:
+<pre>
+	if <condition>
+		<body>
+	elif <condition>
+		<body>
+		…
+	else
+		<body>
+	endif
+</pre>
+
+The condition <i>must</i> be a expression without any hexadecimal values, or a atomic hexadecimal value.
+The assembler has some quirks, one being that the different keywords, while <i>within</i> a <pre style="display: inline-block">if/endif</pre> block are distinguished on basis of their number of arguments, not the keyword, per se. That means a <pre style="display: inline-block">elif</pre> with no arguments will be treated as an <pre style="display: inline-block">else</pre>.
+			</span>
+		</div>
+		<div>
+			<h3>Macros</h3>
+			<span>
+				Neutrino includes a powerful macro subsystem with proper label/variable mangling, general argument substitution, nested macros, macro hoisting, and, with the help of the conditional directives, recursion.
+			</span>
+
+<a href="macroformat"></a>
+<h3>Format</h3>
+<span>
+The general format of a macro is:
+<pre>
+  name: macro arg1, arg2, …
+	locals l1, l2, l3 …
+	;body
+/mangledLabel: ;body
+	…
+	endm
+</pre>
+For example: 
+<pre>
+	l2: macro x, y, z
+	locals q
+	mvi a, x
+/atmvb: mov b, y
+	mov c, z
+	q = 15
+	mvi d, q
+	endm
+
+	l2 15, B, C
+</pre>
+This is a nonsensical macro, but it illustrates how a macro may be used.
+</span>
+
+<a href="macropassname"></a>
+<h3>Passing Names</h3>
+<span>
+As shown in the example, if you want to pass a name to an macro, pass the name of the register in UPPERCASE. This serves as an hint to the assembler to not parse it as an hexadecimal value. However, if used in a place where a hexadecimal value is to be used, it can and will be converted into one.
+</span>
+
+<a href="macromangle"></a>
+<h3>Local Label Mangling</h3> 
+<span>
+Notice the label <pre style="display: inline-block">/atmvb:</pre> in the previous example. It is a local label. As macros are just substituted, two conflicting labels, from say two invocations of the same macro, may overwrite each other and thus only the second label will be used in the final assembly. To solve this issue, macros have the ability to <pre style="display: inline-block">mangle</pre> labels. 
+A mangled label is declared (within a macro) as <pre style="display: inline-block">/labelname</pre>, and is replaced with <pre style="display: inline-block">/labelName_indLocInstNoXX</pre> where <pre style="display: inline-block">XX</pre> is the current index of the macro. The index of a macro is initialized by 0 and increases by one every time a macro is called. However, this property is internal and cannot be referenced. It is recommended that you do not use labels of this form in your assembly code, to avoid conflicts.
+The <pre style="display: inline-block">/</pre> is a hint to create a local. It is not used while actually using the label, that is, a local label declared <pre style="display: inline-block">/abc</pre> will be used as <pre style="display: inline-block">abc</pre>. 
+</span>
+
+<a href="macrolocal"></a>
+<h3>Locals</h3>
+<span>
+The locals directive allows declaration of local symbols, that is, symbols that have their names mangled. This is useful when you do not want to pollute the global namespace with symbol names.
+</span>
+
+<a href="macrohoist"></a>
+<h3>Macro Hoisting</h3>
+<span>
+Macros in neutrino are hoisted, that is, a macro can be defined anywhere in code, and be called from <i>everywhere</i> in the code, even before the part in which the macro was defined. The same applies to labels, but not symbols.
+</span>
+
+<a href="macronest"></a>
+<h3>Nesting Macros</h3>
+<span>
+Macros can be nested in one another. In addition, any macro may call any other macro, or declare another macro. However, it is not possible to conditionally define macros.
+</span>
+
+
+<a href="macrorecur"></a>
+<h3>Recursive Macros</h3>
+<span>
+Macros can call themselves, and thus allow for primitive recursion:
+<pre>
+  ssum: macro n
+	if n > 1
+	ssum n - 1
+	endif
+	adi n
+	endm
+
+	ssum 5
+	hlt
+</pre>
+Note that the assembler will happily keep recurring till it runs out of memory. It is up to the user to control how deep the recursion is and the assembler will <i>*not* warn</i> you if you do not control how deep your recursion goes. An infinite recursion <i>will</i> crash the assembler
+			</span>
+		</div>
+
+		<span class="indicator"></span>
+	</body>
+</html>

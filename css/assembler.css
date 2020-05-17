@@ -34,6 +34,14 @@ html, body {
 	/*for moz*/
 	scrollbar-color: #dddddd #262626;
 	transition: all 0.5s ease-in-out;
+
+	-webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .toast {
@@ -217,6 +225,17 @@ html, body {
 	background-color: rgba(0,0,0,0.5);
 }
 
+.modal > span.body {
+	display: block;
+	width: 100%;
+	padding: 0 1.25em;
+	word-wrap: break-word;
+}
+
+.modal > span.body > a {
+	color: rgba(0,153,114,1);
+}
+
 .modal > input[type=file] {
 	font-size: 1em;
 	font-family: 'Roboto', sans-serif;
@@ -368,6 +387,14 @@ html, body {
 	font-size: 1em;
 	color: goldenrod;
 }
+.modal >iframe {
+	outline: none;
+	border: 0;
+	width: 100%;
+	color: white;
+	height: 450px;
+	max-height: calc(100vh - 130px);
+}
 
 #modal-shade {
 	z-index: 99;
@@ -376,7 +403,7 @@ html, body {
 	bottom: 0;
 	left: 0;
 	right: 0;
-	background-color: rgba(0,0,0,0.1);
+	background-color: rgba(0,0,0,0.35);
 	transition: opacity 0.2s ease-in-out;
 }
 
@@ -774,6 +801,27 @@ th.disabled, td.disabled {
 #mobile-code-editor, .codeflask, .codeflask__textarea {
 	display: none;
 }
+
+#imageContainer {
+    		display: inline-block;
+    		overflow: hidden;
+    		width: 150px;
+    		height: 150px;
+    		position: relative;
+    		background-color: rgba(0,253,214,0.8);
+    		border-radius: 150px;
+    		box-shadow: 0 5px 25px rgba(0,253,214,0.3), 0 5px 10px rgba(0,253,214,0.3), 0 0 50px rgba(0,253,214,0.1);
+            margin-top: 8vh;
+            margin-bottom: 1em;
+    	}
+
+    	#imageContainer > img {
+    		width: 200px;
+    		height: 200px;
+    		position: absolute;
+    		top: calc(50% - 100px);
+    		left: calc(50% - 100px);
+    	}
 
 
 @media all and (max-width: 910px) {
