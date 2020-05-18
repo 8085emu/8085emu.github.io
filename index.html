@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>8085 Emulator</title>
+	<title>8085 Simulator • Neutrino</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 	<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,400i,700|Roboto+Condensed:400|Roboto+Mono:300,400,400i,700&display=swap" rel="stylesheet">
@@ -14,16 +14,17 @@
 
     <!--SEO Stuff-->
     <meta name="google-site-verification" content="hrI3XLLbme1o6gHxfAt4wMY3XIZnHVx3C9HiW5fY9xg" />
+    <meta name="description" content="A fully-featured 8085 Simulator and Assembler for web browsers. Run or step through your code, generate Hex listings, assemble programs and more."/>
 </head>
 <body>
-	<h1 class="disable-selection"><b>8085•Neutrino</b> Runtime 
+	<div class="disable-selection heading"><h1><b>8085•Neutrino</b> Runtime</h1> 
 		<a href="coder.html" id="assembler--button">ASSEMBLER</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="openMemory()">open_in_browser</a>
 		<a class="material-icons md-24" id="save-file--button" onclick="saveMemory()">save_alt</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>
 		<a class="material-icons md-24" id="open-help--button" onclick="showHelp()">help_outline</a>
 		<a class="material-icons md-24 mobile-only" id="menu--button" onclick="toggleMenu()">menu</a>
-	</h1>
+	</div>
 	<div id="menu" class="menu-hidden disable-selection">
 		<a class="material-icons md-24" id="open-help--button" onclick="showHelp()">help_outline</a>
 		<a class="material-icons md-24" id="open-file--button" onclick="shareMemory()">share</a>

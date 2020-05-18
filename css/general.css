@@ -37,22 +37,28 @@ br {
 	display: none;
 }
 
-h1 {
+.heading {
+	display: block;
+	width: 100%;
+	padding: 1.5em 1.7em 0 1.7em;
+	box-sizing: border-box;
+}
+
+.heading > h1 {
 	font-family: 'Roboto', sans-serif;
 	font-weight: 300;
 	text-transform: uppercase;
 	font-size: 1.1em;
 	color: rgb(0,253,214);
 	position: relative;
-	padding: 1.5em 1.7em 0 1.7em;
 	margin: 0;
 	box-sizing: border-box;
-	display: block;
-	width: 100%;
+	display: inline-block;
+
 	z-index: 50;
 }
 
-h1 > a {
+.heading > a {
 	cursor: pointer;
 	float: right;
 	color: white;
@@ -65,7 +71,7 @@ h1 > a {
 	transition: all 0.05s ease-in-out;
 }
 
-h1 > a:hover {
+.heading > a:hover {
 	float: right;
 	color: white;
 	display: block;
@@ -80,7 +86,7 @@ h1 > a:hover {
 	transform: translateY(-4px);
 }
 
-h1 > a:active {
+.heading > a:active {
 	float: right;
 	color: white;
 	text-decoration: none;
@@ -482,7 +488,7 @@ h1 > a:active {
 	top: -10em;
 }
 
-.mobile-only, #menu {
+.mobile-only, #menu, #menu--button {
 	display: none;
 }
 
@@ -491,12 +497,12 @@ h1 > a:active {
 		padding: 0;
 	}
 
-	h1 {
+	.heading {
 		padding-bottom: 1.8em;
 	}
 
-	h1 > a {
-		display: none !important;
+	.heading > a {
+		display: none;
 	}
 	.display-helper--container {
 		display: block;
